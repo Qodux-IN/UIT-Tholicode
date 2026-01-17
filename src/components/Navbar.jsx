@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { Mail, Phone, X } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
+import { Mail, Phone, X } from 'lucide-react';
 
-const Navbar = ({ isMenuOpen, toggleMenu }) => {
+const Navbar = ({ isMenuOpen, toggleMenu, setMenuOpen }) => {
   const location = useLocation();
   const navigateTo = useNavigate();
-
   const currentPath = location.pathname.toLowerCase();
 
   const desktopNavRef = useRef(null);
@@ -22,6 +21,7 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
     { label: 'INFRASTRUCTURE', value: '/infrastructure' },
     { label: 'ADMISSION', value: '/admission' },
     { label: 'CAREERS', value: '/careers' },
+    { label: 'FYUGP', value: '/fyugp' },
     { label: 'CONTACT US', value: '/contact-us' },
   ];
 
@@ -31,8 +31,11 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
       return;
     }
     navigateTo(item.value);
-    toggleMenu();
   };
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (desktopNavRef.current) {
@@ -48,17 +51,15 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
     if (mobileMenuRef.current && mobileMenuContentRef.current) {
       const tl = gsap.timeline({ paused: true });
 
-      tl.to(mobileMenuRef.current, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0);
-
-      tl.to(mobileMenuContentRef.current, { x: 0, duration: 0.4, ease: 'power3.out' }, 0);
-
+      tl.to(mobileMenuRef.current, { opacity: 1, duration: 0.3 }, 0);
+      tl.to(mobileMenuContentRef.current, { x: 0, duration: 0.4 }, 0);
       tl.fromTo(
         [
           mobileMenuContentRef.current.querySelector('.contact-info-section'),
           mobileMenuItemsRef.current,
         ],
         { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, stagger: 0.07, duration: 0.3, ease: 'power2.out' },
+        { opacity: 1, y: 0, stagger: 0.07, duration: 0.3 },
         0.2
       );
 
@@ -77,15 +78,15 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
 
   return (
     <div>
-      <div className="hidden lg:block px-4 md:px-30 py-2 w-screen h-auto bg-gradient-to-r from-blue-950 to-neutral-900">
-        <ul className='flex justify-between text-white text-md font-semibold' ref={desktopNavRef}>
+      <div className="hidden lg:block px-4 md:px-30 py-2 w-screen bg-gradient-to-r from-blue-950 to-neutral-900">
+        <ul className="flex justify-between text-white text-md font-semibold" ref={desktopNavRef}>
           {menuItems.map((item) => (
             <li
               key={item.value}
-              className={`cursor-pointer transition-colors hover:text-blue-200 ${
+              onClick={() => handleNavigation(item)}
+              className={`cursor-pointer hover:text-blue-200 transition-colors ${
                 currentPath === item.value ? 'text-blue-200' : ''
               }`}
-              onClick={() => handleNavigation(item)}
             >
               {item.label}
             </li>
@@ -93,59 +94,56 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
         </ul>
       </div>
 
-      {/* Mobile Navbar */}
       {isMenuOpen && (
         <div
           ref={mobileMenuRef}
-          className="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-50"
+          className="hidden fixed inset-0 z-50 bg-black bg-opacity-50"
           onClick={toggleMenu}
           style={{ display: 'none', opacity: 0 }}
         >
           <div
             ref={mobileMenuContentRef}
-            className="absolute top-0 right-0 w-80 max-w-sm h-full bg-white shadow-xl"
+            className="absolute top-0 right-0 w-80 h-full bg-white"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-end items-center p-4 border-b border-gray-200">
-              <button onClick={toggleMenu} className="p-2 rounded-md hover:bg-gray-100">
+            <div className="flex justify-end p-4 border-b">
+              <button onClick={toggleMenu}>
                 <X size={24} />
               </button>
             </div>
 
-            <div className="p-4 border-b border-gray-200 bg-gray-50 contact-info-section">
+            <div className="p-4 contact-info-section bg-gray-50 border-b">
               <h3 className="font-semibold text-gray-800 mb-3">Connect with us</h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
                   <div className="border-2 border-red-500 rounded-full p-1">
-                    <Mail className='text-red-500 size-4'/>
+                    <Mail className="text-red-500 size-4" />
                   </div>
-                  <p className='text-sm text-gray-700'>uittholicode@gmail.com</p>
+                  <p className="text-sm text-gray-700">uittholicode@gmail.com</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="border-2 border-red-500 rounded-full p-1">
-                    <Phone className='text-red-500 size-4'/>
+                    <Phone className="text-red-500 size-4" />
                   </div>
-                  <p className='text-sm text-gray-700'>+99 9999999999</p>
+                  <p className="text-sm text-gray-700">0472 2878944</p>
                 </div>
               </div>
             </div>
 
-            <div className="overflow-y-auto">
-              <ul className="py-2">
-                {menuItems.map((item, index) => (
-                  <li
-                    key={item.value}
-                    ref={(el) => (mobileMenuItemsRef.current[index] = el)}
-                    className={`px-4 py-3 cursor-pointer transition-colors hover:bg-blue-50 border-b border-gray-100 ${
-                      currentPath === item.value ? 'bg-blue-100 text-blue-700 border-l-4 border-l-blue-500' : 'text-gray-700'
-                    }`}
-                    onClick={() => handleNavigation(item)}
-                  >
-                    {item.label}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <ul className="overflow-y-auto py-2">
+              {menuItems.map((item, index) => (
+                <li
+                  key={item.value}
+                  ref={(el) => (mobileMenuItemsRef.current[index] = el)}
+                  className={`px-4 py-3 border-b text-gray-700 cursor-pointer hover:bg-blue-50 ${
+                    currentPath === item.value ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-500' : ''
+                  }`}
+                  onClick={() => handleNavigation(item)}
+                >
+                  {item.label}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       )}

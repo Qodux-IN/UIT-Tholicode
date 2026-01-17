@@ -119,22 +119,26 @@ const Section = () => {
 
     return () => ctx.revert();
   }, []);
-
+  // <span className='font-extrabold text-blue-950'></span>
   return (
     <div ref={containerRef}>
-      <div className="flex flex-col justify-center items-center max-w-3xl sm:px-15 px-8 py-10">
+      <div className="flex flex-col justify-center items-center max-w-3xl sm:px-15 px-8 py-10 sm:ml-20">
         <p ref={titleRef} className='sm:text-[30px] text-xl sm:font-bold font-extrabold font-serif text-[#6E260E]'>
           A FEW WORDS ABOUT US....
         </p>
         <p ref={paragraphRef} className='mt-5 sm:text-lg text-sm sm:text-justify'>
-          Located in the serene village of Tholicode(Pulimoodu) in Tholicode Panchayath, Our college is a center of excelence dedicated to providing quality education in a peacefull and nature rich environment. Just 13 kilometeres from Nedumangad town, our campus offers students a calm and inspiring atmosphere for academic and personal growth.
-          Our college is one of the  
-           <span className='font-extrabold text-blue-950'> 30 learning centers governed by the University of Kerala(UOK)</span>
-          ,Which established these institutions 25 years ago to 
-          <span className='font-extrabold text-blue-950'> promote technology-focused education in rural areas.</span> 
-          These centers offers specialized undergraduate programs such as 
-          <span className='font-extrabold text-blue-950'> B.Sc Computer Science and BCom. Commerce with Computer Applications</span>
-          ,ensuring that students from remote locations have access to modern education and career opputunities. 
+          Nestled in the serenc villagc of Tholicode (Pulimoodu) in Tholicode Panchayath, our collcge
+          offers a peaccful lcarning cnvironmcnt away from the hustlc and bustle of the city. Locatcd
+          just 13 kilometers from Nedumangad town, the college is surrounded by lush greenery,
+          rolling hills, and the refreshing charm of nature.
+          <br /><br />
+          Established in 2017, the college startcd with two undcrgraduate programsB.Sc. Computer
+          Science and B.Com. Commerce with Computer Applications. Committed to academic
+          excellence, we provide quality cducation with modern facilities while preserving the beauty
+          of our rural surroundings. The calm and pollution-free environment enhances the learning
+          experience, making it an ideal place for students to grow academically and personally.
+          <br /><br />
+          Join us and be a part of a journey that blends knowledge with nature! 
         </p>
         <button 
           ref={buttonRef}

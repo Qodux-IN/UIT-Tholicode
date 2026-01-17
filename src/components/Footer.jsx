@@ -11,7 +11,7 @@ const Footer = () => {
                   <img className='sm:w-10 w-15' src="/images/UIT-Logo.svg" alt="" />
                   <p className='text-3xl font-bold'>UIT Tholicode</p>
               </div>
-              <p className=' sm:max-w-80 max-w-70 mt-2 sm:text-start text-justify'>The University Institute of Technology, Nedumangad Regional Centre was established in 1995 by the University of Kerala with a view to train the students for employment in Research and Development Institutions, Business Organizations, Industries and for self-employment.</p>
+              <p className=' sm:max-w-80 max-w-70 mt-2 sm:text-start text-justify'>The University Institute of Technology, Nedumangad Regional Centre was established in 2017 by the University of Kerala with a view to train the students for employment in Research and Development Institutions, Business Organizations, Industries and for self-employment.</p>
           </div>
           <div className="sm:mt-0 mt-4 flex flex-col sm:items-start items-center sm:justify-start justify-center">
               <p className='font-bold text-xl'>COURSES AVAILABLE</p>
@@ -21,7 +21,7 @@ const Footer = () => {
           <div className="sm:mt-0 mt-4 flex flex-col sm:items-start items-center sm:justify-start justify-center">
               <p className='font-bold text-xl'>CONTACT</p>
               <p className='mt-3 font-extralight text-lg'>Email : uittholicode@gmail.com</p>
-              <p className='font-extralight text-lg'>Phone : +91 9999999999</p>
+              <p className='font-extralight text-lg'>Phone : 0472 2878944</p>
               <p className='font-extralight text-lg'>Location : Kerala,India</p>
               <div className="flex mt-4 gap-2">
                   <IoLogoWhatsapp className='text-3xl rounded-full hover:bg-white border-none hover:text-green-500'/>

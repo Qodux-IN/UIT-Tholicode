@@ -19,11 +19,10 @@ const Header = ({ isMenuOpen, toggleMenu }) => {
         });
 
         tl.fromTo(logoRef.current,
-          { opacity: 0, scale: 0, rotation: -180 },
+          { opacity: 0, scale: 0 },
           {
             opacity: 1,
             scale: 1,
-            rotation: 0,
             duration: 1,
             ease: "back.out(1.7)"
           }
@@ -138,7 +137,7 @@ const Header = ({ isMenuOpen, toggleMenu }) => {
       <div className="flex gap-4">
         <img 
           ref={logoRef}
-          className='sm:w-20 w-12' 
+          className='sm:w-25 w-12' 
           src="/images/UIT-Logo.svg" 
           alt="UIT Logo" 
         />
@@ -181,7 +180,7 @@ const Header = ({ isMenuOpen, toggleMenu }) => {
                 <Phone className='text-red-500 size-5'/>
               </div>
               <p className='text-sm mt-2 hover:text-red-500 transition-colors cursor-pointer'>
-                +99 9999999999
+                0472 2878944
               </p>
             </div>
           </div>

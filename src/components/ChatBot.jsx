@@ -1,78 +1,102 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X } from 'lucide-react';
+import { Bot, X } from 'lucide-react';
 
 export default function ChatBot() {
-  const [showModal, setShowModal] = useState(false);
+  const [isMounted, setIsMounted] = useState(false); // For mounting/unmounting
+  const [isVisible, setIsVisible] = useState(false); // For animation
   const [messages, setMessages] = useState([
     { from: 'bot', text: 'Hi! How can I help you?' }
   ]);
   const [input, setInput] = useState('');
   const [botHi, setBotHi] = useState('');
-  const messagesEndRef = useRef(null);
   const [isTyping, setIsTyping] = useState(false);
+  const modalRef = useRef(null);
+  const messagesEndRef = useRef(null);
+  const inactivityTimer = useRef(null);
 
+  // Floating bot icon waving
   useEffect(() => {
     const interval = setInterval(() => {
       setBotHi('👋 Hi there!');
       setTimeout(() => setBotHi(''), 3000);
-    }, 5000);
-
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    }, 8000);
     return () => clearInterval(interval);
-  }, [messages, isTyping]);
+  }, []);
 
+  // Scroll to latest message
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages]);
+  }, [messages, isTyping]);
+
+
+  // Outside click detection
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        handleClose();
+      }
+    };
+    if (isMounted) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMounted]);
 
   const handleSend = () => {
-  if (!input.trim()) return;
+    if (!input.trim()) return;
 
-  const userMessage = { from: 'user', text: input.trim() };
-  setMessages(prev => [...prev, userMessage]);
-  setInput('');
-  setIsTyping(true);
+    const userMessage = { from: 'user', text: input.trim() };
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsTyping(true);
 
-  const lower = input.toLowerCase();
-  let botText = 'Sorry, I did not understand that. Try asking about courses, departments, admissions, or contact info.';
+    const lower = input.toLowerCase();
+    let botText = 'Sorry, I did not understand that. Try asking about courses, departments, admissions, or contact info.';
 
-  if (['hi', 'hello', 'hey'].some(word => lower.includes(word))) {
-    botText = 'Hello! 👋 I’m here to help you with info about our college.';
-  } else if (lower.includes('help')) {
-    botText = 'Sure! You can ask me about courses, departments, faculties, admission process, or contact info.';
-  } else if (lower.includes('course') || lower.includes('program')) {
-    botText = 'We offer:\n• BSc Computer Science with AI\n• BCom Finance with Minor in Computer\nMore programs coming soon!';
-  } else if (lower.includes('department') || lower.includes('stream')) {
-    botText = 'We currently have:\n• Department of Computer Science\n• Department of Commerce';
-  } else if (lower.includes('faculty') || lower.includes('teacher')) {
-    botText = 'Our faculty members are experienced and dedicated. You can view them on the "Faculties" page.';
-  } else if (lower.includes('admission') || lower.includes('apply')) {
-    botText = 'You can apply at:\nhttps://admissions.keralauniversity.ac.in/\nNeed help? Let me know!';
-  } else if (lower.includes('contact') || lower.includes('email') || lower.includes('phone')) {
-    botText = '📧 Email: uittholicode@gmail.com\n📞 Phone: +99 9999999999';
-  } else if (lower.includes('bye')) {
-    botText = 'Goodbye! Feel free to come back anytime.';
-  }
+    if (['hi', 'hello', 'hey'].some(word => lower.includes(word))) {
+      botText = 'Hello! 👋 I’m here to help you with info about our college.';
+    } else if (lower.includes('help')) {
+      botText = 'Sure! You can ask me about courses, departments, faculties, admission process, or contact info.';
+    } else if (lower.includes('course') || lower.includes('program')) {
+      botText = 'We offer:\n• BSc Computer Science with AI\n• BCom Finance with Minor in Computer\nMore programs coming soon!';
+    } else if (lower.includes('department') || lower.includes('stream')) {
+      botText = 'We currently have:\n• Department of Computer Science\n• Department of Commerce';
+    } else if (lower.includes('faculty') || lower.includes('teacher')) {
+      botText = 'Our faculty members are experienced and dedicated. You can view them on the "Faculties" page.';
+    } else if (lower.includes('admission') || lower.includes('apply')) {
+      botText = 'You can apply at:\nhttps://admissions.keralauniversity.ac.in/\nNeed help? Let me know!';
+    } else if (lower.includes('contact') || lower.includes('email') || lower.includes('phone')) {
+      botText = '📧 Email: uittholicode@gmail.com\n📞 Phone: +99 9999999999';
+    } else if (lower.includes('bye')) {
+      botText = 'Goodbye! Feel free to come back anytime.';
+    }
 
-  // Simulate bot typing with delay
-  setTimeout(() => {
-    setMessages(prev => [...prev, { from: 'bot', text: botText }]);
-    setIsTyping(false);
-  }, 1000);
-};
+    setTimeout(() => {
+      setMessages(prev => [...prev, { from: 'bot', text: botText }]);
+      setIsTyping(false);
+    }, 1000);
+  };
+
+  const handleOpen = () => {
+    setIsMounted(true);
+    setTimeout(() => setIsVisible(true), 50);
+  };
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setTimeout(() => setIsMounted(false), 300); // match animation duration
+  };
 
   return (
     <>
       {/* Floating Button */}
       <div
-        className="fixed bottom-6 right-6 bg-blue-500 hover:bg-blue-600 p-3 rounded-full cursor-pointer shadow-lg animate-bounce"
-        onMouseEnter={() => setShowModal(true)}
+        className="fixed bottom-6 right-6 bg-blue-500 hover:bg-blue-600 p-3 rounded-full cursor-pointer shadow-lg animate-slow-bounce"
+        onMouseEnter={handleOpen}
       >
-        <MessageCircle className="text-white" />
+        <Bot className="text-white" />
         {botHi && (
           <div className="absolute w-25 -top-11 right-8 bg-white text-sm text-black px-2 py-3 rounded shadow">
             {botHi}
@@ -81,12 +105,17 @@ export default function ChatBot() {
       </div>
 
       {/* Chat Modal */}
-      {showModal && (
-        <div className="fixed sm:bottom-20 bottom-24 sm:right-6 right-6 sm:w-96 w-80 h-[450px] bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden">
+      {isMounted && (
+        <div
+          ref={modalRef}
+          className={`fixed sm:bottom-20 bottom-24 sm:right-6 right-6 sm:w-96 w-80 h-[450px] bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden z-50 transform transition-all duration-300 ease-in-out ${
+            isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
+          }`}
+        >
           {/* Header */}
           <div className="flex justify-between items-center bg-green-500 text-white p-3 rounded-t-xl">
             <span className="font-semibold">ChatBot</span>
-            <button onClick={() => setShowModal(false)}>
+            <button onClick={handleClose}>
               <X className="w-4 h-4 cursor-pointer" />
             </button>
           </div>
@@ -98,7 +127,7 @@ export default function ChatBot() {
                 {msg.from === 'bot' && (
                   <div className="flex items-start space-x-2">
                     <span className="text-xl">🤖</span>
-                    <div className="bg-gray-200 text-black px-3 py-2 rounded-lg max-w-xs">
+                    <div className="bg-gray-200 text-black px-3 py-2 rounded-lg max-w-xs whitespace-pre-line">
                       {msg.text}
                     </div>
                   </div>
@@ -121,12 +150,6 @@ export default function ChatBot() {
             )}
             <div ref={messagesEndRef} />
           </div>
-          {isTyping && (
-            <div className="flex items-center gap-2 text-gray-500 text-sm animate-pulse">
-              <span className="text-xl">🤖</span>
-              <span>Bot is typing...</span>
-            </div>
-          )}
 
           {/* Input */}
           <div className="flex border-t px-3 py-2 bg-white">
@@ -147,6 +170,17 @@ export default function ChatBot() {
           </div>
         </div>
       )}
+
+      {/* Custom bounce animation */}
+      <style>{`
+        @keyframes slow-bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-slow-bounce {
+          animation: slow-bounce 3s infinite;
+        }
+      `}</style>
     </>
   );
 }
